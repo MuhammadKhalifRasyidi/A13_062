@@ -36,6 +36,31 @@ object DestinasiInsertEvent : DestinasiNavigasi {
 
 
 @Composable
+fun InsertBody(
+    insertEvtUiState: InsertEvtUiState,
+    onEventValueChange: (InsertEvtUiEvent) -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(18.dp), modifier = modifier.padding(12.dp)
+    ) {
+        FormInput(
+            insertEvtUiEvent = insertEvtUiState.insertEvtUiEvent,
+            onValueChange = onEventValueChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = onSaveClick,
+            shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save")
+        }
+    }
+}
+
+@Composable
 fun FormInput(
     insertEvtUiEvent: InsertEvtUiEvent,
     modifier: Modifier = Modifier,
