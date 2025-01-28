@@ -51,7 +51,50 @@ object DestinasiHomeTransaksi : DestinasiNavigasi {
     override val titleRes = "Home Transaksi"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTransaksiScreen(
+    navigateToItemInsert: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Int) -> Unit = {},
+    viewModel: HomeTransaksiViewModel = viewModel(factory = PenyediaTransaksiViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold (
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiHomeTransaksi.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getTss()
+                },
+                navigateUp = onBackClick
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToItemInsert,
+                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaksi")
+            }
+        },
+    ) { innerPadding ->
+        HomeTransaksiStatus(
+            homeTransaksiUiState = viewModel.tssUIState,
+            retryAction = { viewModel.getTss() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
+                viewModel.deleteTss(it.id_transaksi)
+                viewModel . getTss ()
+            }
+        )
+    }
+}
 
 @Composable
 fun HomeTransaksiStatus(
