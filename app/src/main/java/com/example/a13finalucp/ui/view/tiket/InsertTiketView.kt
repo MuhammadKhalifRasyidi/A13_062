@@ -36,7 +36,42 @@ object DestinasiInsertTiket : DestinasiNavigasi {
     override val titleRes = "Insert Tiket"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertTktScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertTiketViewModel = viewModel(factory = PenyediaTiketViewModel.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiInsertTiket.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
+            )
+        }
+    ) { innerPadding ->
+        InsertBody(
+            insertTktUiState = viewModel.uiState,
+            onTiketValueChange = viewModel::UpdateInsertTktState,
+            onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.insertTkt()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun InsertBody(
