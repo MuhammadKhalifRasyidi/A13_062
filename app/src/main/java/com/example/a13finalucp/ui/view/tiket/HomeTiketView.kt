@@ -55,6 +55,31 @@ object DestinasiHomeTiket : DestinasiNavigasi {
 }
 
 
+@Composable
+fun TktLayout(
+    tiket: List<Tiket>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Tiket) -> Unit,
+    onDeleteClick: (Tiket) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(tiket) { IDTiket ->
+            TktCard(
+                tiket = IDTiket,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(IDTiket) },
+                onDeleteClick = {
+                    onDeleteClick(IDTiket)
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun TktCard(
