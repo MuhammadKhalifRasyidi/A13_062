@@ -54,7 +54,50 @@ object DestinasiHomeTiket : DestinasiNavigasi {
     override val titleRes = "Home Tiket"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeTiketScreen(
+    navigateToItemInsert: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Int) -> Unit = {},
+    viewModel: HomeTiketViewModel = viewModel(factory = PenyediaTiketViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold (
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiHomeTiket.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getTkt()
+                },
+                navigateUp = onBackClick
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToItemInsert,
+                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Tiket")
+            }
+        },
+    ) { innerPadding ->
+        HomeTiketStatus(
+            homeTiketUiState = viewModel.tktUIState,
+            retryAction = { viewModel.getTkt() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
+                viewModel.deleteTkt(it.id_tiket)
+                viewModel . getTkt ()
+            }
+        )
+    }
+}
 
 @Composable
 fun HomeTiketStatus(
