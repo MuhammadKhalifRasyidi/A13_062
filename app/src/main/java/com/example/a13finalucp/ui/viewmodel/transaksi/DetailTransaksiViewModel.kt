@@ -9,7 +9,24 @@ import com.example.a13finalucp.model.Transaksi
 import com.example.a13finalucp.repository.TransaksiRepository
 import kotlinx.coroutines.launch
 
+class DetailTransaksiViewModel(private val tssRepository: TransaksiRepository) : ViewModel() {
 
+    var uiState by mutableStateOf(DetailTssUiState())
+        private set
+
+    fun fetchDetailTransaksi(id_transaksi: Int) {
+        viewModelScope.launch {
+            uiState = DetailTssUiState(isLoading = true)
+            try {
+                val transaksi = tssRepository.getTransaksiByIdTransaksi(id_transaksi)
+                uiState = DetailTssUiState(detailTssUiTransaksi = transaksi.data.toDetailTssUiTransaksi())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiState = DetailTssUiState(isError = true, errorMessage = "Failed to fetch details: ${e.message}")
+            }
+        }
+    }
+}
 
 data class DetailTssUiState(
     val detailTssUiTransaksi: InsertTssUiTransaksi = InsertTssUiTransaksi(),
