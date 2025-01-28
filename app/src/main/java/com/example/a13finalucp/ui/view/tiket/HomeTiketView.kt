@@ -57,6 +57,45 @@ object DestinasiHomeTiket : DestinasiNavigasi {
 
 
 @Composable
+fun HomeTiketStatus(
+    homeTiketUiState: HomeTiketUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Tiket) -> Unit = {},
+    onDetailClick: (Int) -> Unit
+) {
+
+
+    when (homeTiketUiState) {
+        is HomeTiketUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+
+        is HomeTiketUiState.Success ->
+            if (homeTiketUiState.tiket.isEmpty()) {
+                return Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Tidak ada data Tiket")
+                }
+            } else {
+                TktLayout(
+                    tiket = homeTiketUiState.tiket,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailClick = { onDetailClick(it.id_tiket) },
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    }
+                )
+            }
+        is HomeTiketUiState.Error -> OnError(
+            retryAction,
+            modifier = modifier.fillMaxSize()
+        )
+    }
+}
+
+@Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
