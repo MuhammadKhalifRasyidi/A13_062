@@ -49,6 +49,114 @@ object DestinasiHomePeserta : DestinasiNavigasi {
     override val titleRes = "Home Peserta"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomePesertaScreen(
+    navigateToItemInsert: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Int) -> Unit = {},
+    viewModel: HomePesertaViewModel = viewModel(factory = PenyediaPesertaViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold (
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiHomePeserta.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getPst()
+                },
+                navigateUp = onBackClick
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToItemInsert,
+                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Peserta")
+            }
+        },
+    ) { innerPadding ->
+        HomePesertaStatus(
+            homePesertaUiState = viewModel.pstUIState,
+            retryAction = { viewModel.getPst() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
+                viewModel.deletePst(it.id_peserta)
+                viewModel . getPst ()
+            }
+        )
+    }
+}
+
+@Composable
+fun HomePesertaStatus(
+    homePesertaUiState: HomePesertaUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Peserta) -> Unit = {},
+    onDetailClick: (Int) -> Unit
+) {
+
+
+    when (homePesertaUiState) {
+        is HomePesertaUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+
+        is HomePesertaUiState.Success ->
+            if (homePesertaUiState.peserta.isEmpty()) {
+                return Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Tidak ada data Peserta")
+                }
+            } else {
+                PstLayout(
+                    peserta = homePesertaUiState.peserta,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailClick = { onDetailClick(it.id_peserta) },
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    }
+                )
+            }
+        is HomePesertaUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+    }
+}
+
+@Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(R.drawable.ic_launcher_background),
+        contentDescription = stringResource(R.string.app_name)
+    )
+}
+
+@Composable
+fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = ""
+        )
+        Text(
+            text = stringResource(R.string.app_name),
+            modifier = Modifier.padding(16.dp)
+        )
+        Button (onClick = retryAction) {
+            Text(stringResource(R.string.app_name))
+        }
+    }
+}
 
 @Composable
 fun PstLayout(
