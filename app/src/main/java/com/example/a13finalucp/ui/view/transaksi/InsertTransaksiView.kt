@@ -36,7 +36,41 @@ object DestinasiInsertTransaksi : DestinasiNavigasi {
     override val titleRes = "Insert Transaksi"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertTssScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertTransaksiViewModel = viewModel(factory = PenyediaTransaksiViewModel.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiInsertTransaksi.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
+            )
+        }
+    ) { innerPadding ->
+        InsertBody(
+            insertTssUiState = viewModel.uiState,
+            onTransaksiValueChange = viewModel::UpdateInsertTssState, onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.insertTss()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun InsertBody(
