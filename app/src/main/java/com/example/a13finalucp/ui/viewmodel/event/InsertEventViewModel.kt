@@ -9,7 +9,26 @@ import com.example.a13finalucp.model.Event
 import com.example.a13finalucp.repository.EventRepository
 import kotlinx.coroutines.launch
 
+class InsertEventViewModel(private val evt: EventRepository) : ViewModel() {
+    var uiState by mutableStateOf(InsertEvtUiState())
+        private set
 
+
+    fun UpdateInsertEvtState(insertEvtUiEvent: InsertEvtUiEvent) {
+        uiState = InsertEvtUiState(insertEvtUiEvent = insertEvtUiEvent)
+    }
+
+
+    suspend fun insertEvt() {
+        viewModelScope.launch {
+            try {
+                evt.insertEvent(uiState.insertEvtUiEvent.toEvt())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
 
 data class InsertEvtUiState(
     val insertEvtUiEvent: InsertEvtUiEvent = InsertEvtUiEvent()
