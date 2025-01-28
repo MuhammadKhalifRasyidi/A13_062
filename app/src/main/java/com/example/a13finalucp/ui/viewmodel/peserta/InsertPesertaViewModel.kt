@@ -11,6 +11,17 @@ import kotlinx.coroutines.launch
 
 
 
+data class InsertPstUiState(
+    val insertPstUiPeserta: InsertPstUiPeserta = InsertPstUiPeserta()
+)
+
+data class InsertPstUiPeserta(
+    val id_peserta: Int = 0,
+    val nama_peserta: String = "",
+    val email: String = "",
+    val nomor_telepon: String = ""
+)
+
 fun InsertPstUiPeserta.toPst(): Peserta = Peserta(
     id_peserta = id_peserta,
     nama_peserta = nama_peserta,
