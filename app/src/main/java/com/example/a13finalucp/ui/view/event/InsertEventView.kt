@@ -33,7 +33,41 @@ object DestinasiInsertEvent : DestinasiNavigasi {
     override val titleRes = "Insert Event"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertEvtScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertEventViewModel = viewModel(factory = PenyediaEventViewModel.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiInsertEvent.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
+            )
+        }
+    ) { innerPadding ->
+        InsertBody(
+            insertEvtUiState = viewModel.uiState,
+            onEventValueChange = viewModel::UpdateInsertEvtState, onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.insertEvt()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun InsertBody(
