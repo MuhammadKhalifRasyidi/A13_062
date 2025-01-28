@@ -17,3 +17,36 @@ sealed class HomePesertaUiState {
     object Loading : HomePesertaUiState()
 }
 
+class HomePesertaViewModel(private val pst: PesertaRepository) : ViewModel() {
+    var pstUIState: HomePesertaUiState by mutableStateOf(HomePesertaUiState.Loading)
+        private set
+
+    init {
+        getPst()
+    }
+
+    fun getPst() {
+        viewModelScope.launch {
+            pstUIState = HomePesertaUiState.Loading
+            pstUIState = try {
+                HomePesertaUiState.Success(pst.getPeserta().data)
+            } catch (e: IOException) {
+                HomePesertaUiState.Error
+            } catch (e: HttpException) {
+                HomePesertaUiState.Error
+            }
+        }
+    }
+
+    fun deletePst(id_peserta: Int) {
+        viewModelScope.launch {
+            try {
+                pst.deletePeserta(id_peserta)
+            } catch (e: IOException) {
+                HomePesertaUiState.Error
+            } catch (e: HttpException) {
+                HomePesertaUiState.Error
+            }
+        }
+    }
+}
