@@ -37,6 +37,32 @@ object DestinasiInsertTransaksi : DestinasiNavigasi {
 }
 
 
+
+@Composable
+fun InsertBody(
+    insertTssUiState: InsertTssUiState,
+    onTransaksiValueChange: (InsertTssUiTransaksi) -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(18.dp), modifier = modifier.padding(12.dp)
+    ) {
+        FormInput(
+            insertTssUiTransaksi = insertTssUiState.insertTssUiTransaksi,
+            onValueChange = onTransaksiValueChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = onSaveClick,
+            shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save")
+        }
+    }
+}
+
 @Composable
 fun FormInput(
     insertTssUiTransaksi: InsertTssUiTransaksi,
