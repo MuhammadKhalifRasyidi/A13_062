@@ -54,6 +54,42 @@ object DestinasiHomeTransaksi : DestinasiNavigasi {
 
 
 @Composable
+fun HomeTransaksiStatus(
+    homeTransaksiUiState: HomeTransaksiUiState,
+    retryAction: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (Transaksi) -> Unit = {},
+    onDetailClick: (Int) -> Unit
+) {
+
+
+    when (homeTransaksiUiState) {
+        is HomeTransaksiUiState.Loading -> OnLoading(modifier = modifier.fillMaxSize())
+
+
+        is HomeTransaksiUiState.Success ->
+            if (homeTransaksiUiState.transaksi.isEmpty()) {
+                return Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "Tidak ada data Transaksi")
+                }
+            } else {
+                TssLayout(
+                    transaksi = homeTransaksiUiState.transaksi,
+                    modifier = modifier.fillMaxWidth(),
+                    onDetailClick = { onDetailClick(it.id_transaksi) },
+                    onDeleteClick = {
+                        onDeleteClick(it)
+                    }
+                )
+            }
+        is HomeTransaksiUiState.Error -> OnError(retryAction, modifier = modifier.fillMaxSize())
+    }
+}
+
+@Composable
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
