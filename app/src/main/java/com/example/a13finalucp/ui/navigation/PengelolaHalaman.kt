@@ -131,6 +131,211 @@ fun PengelolaHalaman (
             }
         }
 
+//        EVENT
+        composable(
+            route = DestinasiHomeEvent.route) {
+            HomeEventScreen(
+                navigateToItemInsert = { navController.navigate(DestinasiInsertEvent.route) },
+                onDetailClick = { IDEvent ->
+                    println("HomeEventScreen: Navigate to ${DestinasiDetailEvent.route}/$IDEvent")
+                    navController.navigate("${DestinasiDetailEvent.route}/$IDEvent")
+                },
+                onBackClick = {
+                    navController.navigate(DestinasiHome.route) {
+                        popUpTo(DestinasiHome.route) {
+                            inclusive = true
+                        }
+                    }
+                })
+        }
 
+        composable(DestinasiInsertEvent.route) {
+            InsertEvtScreen(navigateBack = {
+                navController.navigate(DestinasiHomeEvent.route) {
+                    popUpTo(DestinasiHomeEvent.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        composable(
+            DestinasiDetailEvent.routeWithArgs,
+            arguments = listOf(navArgument(DestinasiDetailEvent.IDEvent) {
+                type = NavType.IntType
+            })) {
+            val id_event = it.arguments?.getInt(DestinasiDetailEvent.IDEvent)
+            id_event?.let { id_event ->
+                DetailEventScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onEditClick = { IDEvent ->
+                        println("DetailEventScreen: Navigate to ${DestinasiUpdateEvent.route}/$IDEvent")
+                        navController.navigate("${DestinasiUpdateEvent.route}/$IDEvent")
+//                    navController.navigate("${DestinasiInsertEvent.route}/$it")
+                    },
+                    id_event = id_event
+                )
+            }
+        }
+
+        composable(
+            route = DestinasiUpdateEvent.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiUpdateEvent.IDEvent) { type = NavType.IntType }
+            )
+        ) { backStackInsert ->
+            val id_event = backStackInsert.arguments?.getInt(DestinasiUpdateEvent.IDEvent)
+            id_event?.let {
+                UpdateEventScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = {
+                        navController.navigate(DestinasiHomeEvent.route) {
+                            popUpTo(DestinasiHomeEvent.route) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier,
+                )
+            }
+        }
+
+//        TIKET
+        composable(
+            route = DestinasiHomeTiket.route) {
+            HomeTiketScreen(
+                navigateToItemInsert = { navController.navigate(DestinasiInsertTiket.route) },
+                onDetailClick = { IDTiket ->
+                    println("HomeTiketScreen: Navigate to ${DestinasiDetailTiket.route}/$IDTiket")
+                    navController.navigate("${DestinasiDetailTiket.route}/$IDTiket")
+                },
+                onBackClick = {
+                    navController.navigate(DestinasiHome.route) {
+                        popUpTo(DestinasiHome.route) {
+                            inclusive = true
+                        }
+                    }
+                })
+        }
+
+        composable(DestinasiInsertTiket.route) {
+            InsertTktScreen(navigateBack = {
+                navController.navigate(DestinasiHomeTiket.route) {
+                    popUpTo(DestinasiHomeTiket.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        composable(
+            DestinasiDetailTiket.routeWithArgs,
+            arguments = listOf(navArgument(DestinasiDetailTiket.IDTiket) {
+                type = NavType.IntType
+            })) {
+            val id_tiket = it.arguments?.getInt(DestinasiDetailTiket.IDTiket)
+            id_tiket?.let { id_tiket ->
+                DetailTiketScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onEditClick = { IDTiket ->
+                        println("DetailTiketScreen: Navigate to ${DestinasiUpdateTiket.route}/$IDTiket")
+                        navController.navigate("${DestinasiUpdateTiket.route}/$IDTiket")
+                    },
+                    id_tiket = id_tiket
+                )
+            }
+        }
+
+        composable(
+            route = DestinasiUpdateTiket.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiUpdateTiket.IDTiket)
+                { type = NavType.IntType }
+            )
+        ) { backStackInsert ->
+            val id_tiket = backStackInsert.arguments?.getInt(DestinasiUpdateTiket.IDTiket)
+            id_tiket?.let {
+                UpdateTiketScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = {
+                        navController.navigate(DestinasiHomeTiket.route) {
+                            popUpTo(DestinasiHomeTiket.route) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier,
+                )
+            }
+        }
+
+//        TRANSAKSI
+        composable(
+            route = DestinasiHomeTransaksi.route) {
+            HomeTransaksiScreen(
+                navigateToItemInsert = { navController.navigate(DestinasiInsertTransaksi.route) },
+                onDetailClick = { IDTransaksi ->
+                    println("HomeTransaksiScreen: Navigate to ${DestinasiDetailTransaksi.route}/$IDTransaksi")
+                    navController.navigate("${DestinasiDetailTransaksi.route}/$IDTransaksi")
+                },
+                onBackClick = {
+                    navController.navigate(DestinasiHome.route) {
+                        popUpTo(DestinasiHome.route) {
+                            inclusive = true
+                        }
+                    }
+                })
+        }
+
+        composable(DestinasiInsertTransaksi.route) {
+            InsertTssScreen(navigateBack = {
+                navController.navigate(DestinasiHomeTransaksi.route) {
+                    popUpTo(DestinasiHomeTransaksi.route) {
+                        inclusive = true
+                    }
+                }
+            })
+        }
+
+        composable(
+            DestinasiDetailTransaksi.routeWithArgs,
+            arguments = listOf(navArgument(DestinasiDetailTransaksi.IDTransaksi) {
+                type = NavType.IntType
+            })) {
+            val id_transaksi = it.arguments?.getInt(DestinasiDetailTransaksi.IDTransaksi)
+            id_transaksi?.let { id_transaksi ->
+                DetailTransaksiScreen(
+                    onBackClick = {
+                        navController.popBackStack()
+                    },
+                    onEditClick = { IDTransaksi ->
+                        println("DetailTransaksiScreen: Navigate to ${DestinasiUpdateTransaksi.route}/$IDTransaksi")
+                        navController.navigate("${DestinasiUpdateTransaksi.route}/$IDTransaksi")
+                    },
+                    id_transaksi = id_transaksi
+                )
+            }
+        }
+
+        composable(
+            route = DestinasiUpdateTransaksi.routesWithArg,
+            arguments = listOf(
+                navArgument(DestinasiUpdateTransaksi.IDTransaksi)
+                { type = NavType.IntType }
+            )
+        ) { backStackInsert ->
+            val id_transaksi = backStackInsert.arguments?.getInt(DestinasiUpdateTransaksi.IDTransaksi)
+            id_transaksi?.let {
+                UpdateTransaksiScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigate = {
+                        navController.navigate(DestinasiHomeTransaksi.route) {
+                            popUpTo(DestinasiHomeTransaksi.route) { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier,
+                )
+            }
+        }
     }
 }
