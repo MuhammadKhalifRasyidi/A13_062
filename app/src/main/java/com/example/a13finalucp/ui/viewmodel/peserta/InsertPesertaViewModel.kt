@@ -9,7 +9,26 @@ import com.example.a13finalucp.model.Peserta
 import com.example.a13finalucp.repository.PesertaRepository
 import kotlinx.coroutines.launch
 
+class InsertPesertaViewModel(private val pst: PesertaRepository) : ViewModel() {
+    var uiState by mutableStateOf(InsertPstUiState())
+        private set
 
+
+    fun UpdateInsertPstState(insertPstUiPeserta: InsertPstUiPeserta) {
+        uiState = InsertPstUiState(insertPstUiPeserta = insertPstUiPeserta)
+    }
+
+
+    suspend fun insertPst() {
+        viewModelScope.launch {
+            try {
+                pst.insertPeserta(uiState.insertPstUiPeserta.toPst())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
 
 data class InsertPstUiState(
     val insertPstUiPeserta: InsertPstUiPeserta = InsertPstUiPeserta()
