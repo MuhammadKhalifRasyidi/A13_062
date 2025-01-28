@@ -65,7 +65,7 @@ fun DetailEventScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiDetailPeserta.titleRes,
+                title = DestinasiDetailEvent.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {

@@ -78,7 +78,7 @@ fun DetailTiketScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiDetailPeserta.titleRes,
+                title = DestinasiDetailTiket.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {

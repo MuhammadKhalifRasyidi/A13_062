@@ -76,7 +76,7 @@ fun DetailTransaksiScreen(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CostumeTopAppBar(
-                title = DestinasiDetailPeserta.titleRes,
+                title = DestinasiDetailTransaksi.titleRes,
                 canNavigateBack = true,
                 scrollBehavior = scrollBehavior,
                 onRefresh = {
