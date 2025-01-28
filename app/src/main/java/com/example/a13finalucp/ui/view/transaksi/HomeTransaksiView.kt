@@ -37,12 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a13finalucp.R
-import com.example.a13finalucp.model.DataForeignKey
 import com.example.a13finalucp.model.DataForeignKey.TiketEvent
 import com.example.a13finalucp.model.DataForeignKey.TiketPeserta
-import com.example.a13finalucp.model.DataForeignKey.lokasiEvent
-import com.example.a13finalucp.model.DataForeignKey.namaEvent
-import com.example.a13finalucp.model.DataForeignKey.tanggalEvent
 import com.example.a13finalucp.model.Transaksi
 import com.example.a13finalucp.ui.customwidget.CostumeTopAppBar
 import com.example.a13finalucp.ui.navigation.DestinasiNavigasi
@@ -56,6 +52,34 @@ object DestinasiHomeTransaksi : DestinasiNavigasi {
 }
 
 
+
+@Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(R.drawable.ic_launcher_background),
+        contentDescription = stringResource(R.string.app_name)
+    )
+}
+
+@Composable
+fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = ""
+        )
+        Text(
+            text = stringResource(R.string.app_name),
+            modifier = Modifier.padding(16.dp)
+        )
+        Button (onClick = retryAction) {
+            Text(stringResource(R.string.app_name))
+        }
+    }
+}
 
 @Composable
 fun TssLayout(
