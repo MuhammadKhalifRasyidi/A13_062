@@ -50,6 +50,31 @@ object DestinasiHomePeserta : DestinasiNavigasi {
 }
 
 
+@Composable
+fun PstLayout(
+    peserta: List<Peserta>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Peserta) -> Unit,
+    onDeleteClick: (Peserta) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(peserta) { IDPeserta ->
+            PstCard(
+                peserta = IDPeserta,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(IDPeserta) },
+                onDeleteClick = {
+                    onDeleteClick(IDPeserta)
+                }
+            )
+        }
+    }
+}
 
 @Composable
 fun PstCard(
