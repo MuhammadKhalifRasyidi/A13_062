@@ -33,7 +33,41 @@ object DestinasiInsertPeserta : DestinasiNavigasi {
     override val titleRes = "Insert Peserta"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun InsertPstScreen(
+    navigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: InsertPesertaViewModel = viewModel(factory = PenyediaPesertaViewModel.Factory)
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiInsertPeserta.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
+            )
+        }
+    ) { innerPadding ->
+        InsertBody(
+            insertPstUiState = viewModel.uiState,
+            onPesertaValueChange = viewModel::UpdateInsertPstState, onSaveClick = {
+                coroutineScope.launch {
+                    viewModel.insertPst()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier
+                .padding(innerPadding)
+                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun InsertBody(
