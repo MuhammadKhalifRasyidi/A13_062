@@ -52,6 +52,34 @@ object DestinasiHomeEvent : DestinasiNavigasi {
 
 
 @Composable
+fun OnLoading(modifier: Modifier = Modifier) {
+    Image(
+        modifier = modifier.size(200.dp),
+        painter = painterResource(R.drawable.ic_launcher_background),
+        contentDescription = stringResource(R.string.app_name)
+    )
+}
+
+@Composable
+fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = ""
+        )
+        Text(
+            text = stringResource(R.string.app_name),
+            modifier = Modifier.padding(16.dp)
+        )
+        Button (onClick = retryAction) {
+            Text(stringResource(R.string.app_name))
+        }
+    }
+}
+
+@Composable
 fun EvtLayout(
     event: List<Event>,
     modifier: Modifier = Modifier,
