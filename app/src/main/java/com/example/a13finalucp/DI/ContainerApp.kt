@@ -21,6 +21,7 @@ interface AppContainer {
     val pesertaRepository: PesertaRepository
     val eventRepository: EventRepository
     val tiketRepository: TiketRepository
+    val transaksiRepository: TransaksiRepository
 }
 
 class  ContainerApplication : AppContainer {
@@ -56,5 +57,10 @@ class  ContainerApplication : AppContainer {
     }
 
 //    TRANSAKSI
+    private val transaksiService: TransaksiService by lazy{
+        retrofit.create(TransaksiService::class.java) }
 
+    override val transaksiRepository: TransaksiRepository by lazy {
+        NetworkTransaksiRepository(transaksiService)
+    }
 }
