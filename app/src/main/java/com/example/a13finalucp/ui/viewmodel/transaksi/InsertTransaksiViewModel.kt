@@ -9,7 +9,26 @@ import com.example.a13finalucp.model.Transaksi
 import com.example.a13finalucp.repository.TransaksiRepository
 import kotlinx.coroutines.launch
 
+class InsertTransaksiViewModel(private val tss: TransaksiRepository) : ViewModel() {
+    var uiState by mutableStateOf(InsertTssUiState())
+        private set
 
+
+    fun UpdateInsertTssState(insertTssUiTransaksi: InsertTssUiTransaksi) {
+        uiState = InsertTssUiState(insertTssUiTransaksi = insertTssUiTransaksi)
+    }
+
+
+    suspend fun insertTss() {
+        viewModelScope.launch {
+            try {
+                tss.insertTransaksi(uiState.insertTssUiTransaksi.toTss())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
 
 data class InsertTssUiState(
     val insertTssUiTransaksi: InsertTssUiTransaksi = InsertTssUiTransaksi()
