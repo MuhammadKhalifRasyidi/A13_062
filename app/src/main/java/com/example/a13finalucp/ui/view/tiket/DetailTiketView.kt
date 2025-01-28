@@ -42,7 +42,106 @@ object DestinasiDetailTiket : DestinasiNavigasi {
     val routeWithArgs = "$route/{$IDTiket}"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailTiketScreen(
+    id_tiket: Int,
+    onEditClick: (Int) -> Unit = { },
+    onBackClick: () -> Unit = { },
+    modifier: Modifier = Modifier,
+    viewModel: DetailTiketViewModel = viewModel(factory = PenyediaTiketViewModel.Factory)
+) {
+    val tiket = viewModel.uiState.detailTktUiTiket
+    val EventList = namaEvent()
+    val tglEventList = tanggalEvent()
+    val lksEventList = lokasiEvent()
+    val PesertaList = DataForeignKey.DataPeserta()
 
+    val NamaEvent = EventList.find { it.first == tiket.id_event }?.second ?: ""
+    val TanggalEvent = tglEventList.find { it.first == tiket.id_event }?.second ?: ""
+    val LokasiEvent = lksEventList.find { it.first == tiket.id_event }?.second ?: ""
+    val NamaPeserta = PesertaList.find { it.first == tiket.id_peserta }?.second ?: ""
+
+    LaunchedEffect(id_tiket) {
+        viewModel.fetchDetailTiket(id_tiket)
+    }
+
+    val isLoading = viewModel.uiState.isLoading
+    val isError = viewModel.uiState.isError
+    val errorMessage = viewModel.uiState.errorMessage
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(DestinasiDetailTiket.titleRes) },
+                navigationIcon = {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+            )
+        },
+        content = { paddingValues ->
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                else if (isError) {
+                    Text(
+                        text = errorMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else if (viewModel.uiState.isUiTiketNotEmpty) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                // Use Row for each detail with label and value aligned
+                                DetailTktRow(label = "ID Tiket", value = tiket.id_tiket)
+                                DetailTktRow(label = "Nama Event", value = NamaEvent)
+                                DetailTktRow(label = "Nama Peserta", value = NamaPeserta)
+                                DetailTktRow(label = "Tanggal Event", value = TanggalEvent)
+                                DetailTktRow(label = "Lokasi Event", value = LokasiEvent)
+                                DetailTktRow(label = "Kapasitas Tiket", value = tiket.kapasitas_tiket)
+                                DetailTktRow(label = "Harga Tiket", value = tiket.harga_tiket)
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Button(onClick = { onEditClick(tiket.id_tiket) }) {
+                                Text("Edit Data")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
 
 @Composable
 fun DetailTktRow(label: String, value: Any) {
