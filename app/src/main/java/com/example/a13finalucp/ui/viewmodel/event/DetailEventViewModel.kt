@@ -9,6 +9,24 @@ import com.example.a13finalucp.model.Event
 import com.example.a13finalucp.repository.EventRepository
 import kotlinx.coroutines.launch
 
+class DetailEventViewModel(private val evtRepository: EventRepository) : ViewModel() {
+
+    var uiState by mutableStateOf(DetailEvtUiState())
+        private set
+
+    fun fetchDetailEvent(id_event: Int) {
+        viewModelScope.launch {
+            uiState = DetailEvtUiState(isLoading = true)
+            try {
+                val event = evtRepository.getEventByIdEvent(id_event)
+                uiState = DetailEvtUiState(detailEvtUiEvent = event.data.toDetailEvtUiEvent())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiState = DetailEvtUiState(isError = true, errorMessage = "Failed to fetch details: ${e.message}")
+            }
+        }
+    }
+}
 
 data class DetailEvtUiState(
     val detailEvtUiEvent: InsertEvtUiEvent = InsertEvtUiEvent(),
