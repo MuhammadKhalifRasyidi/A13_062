@@ -58,6 +58,32 @@ object DestinasiHomeTransaksi : DestinasiNavigasi {
 
 
 @Composable
+fun TssLayout(
+    transaksi: List<Transaksi>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Transaksi) -> Unit,
+    onDeleteClick: (Transaksi) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(transaksi) { IDTransaksi ->
+            TssCard(
+                transaksi = IDTransaksi,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(IDTransaksi) },
+                onDeleteClick = {
+                    onDeleteClick(IDTransaksi)
+                }
+            )
+        }
+    }
+}
+
+@Composable
 fun TssCard(
     transaksi: Transaksi,
     modifier: Modifier = Modifier,
