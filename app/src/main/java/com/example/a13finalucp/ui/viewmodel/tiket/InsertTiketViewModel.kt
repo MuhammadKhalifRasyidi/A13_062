@@ -9,7 +9,25 @@ import com.example.a13finalucp.model.Tiket
 import com.example.a13finalucp.repository.TiketRepository
 import kotlinx.coroutines.launch
 
+class InsertTiketViewModel(
+    private val tkt: TiketRepository) : ViewModel() {
+    var uiState by mutableStateOf(InsertTktUiState())
+        private set
 
+    fun UpdateInsertTktState(insertTktUiTiket: InsertTktUiTiket) {
+        uiState = InsertTktUiState(insertTktUiTiket = insertTktUiTiket)
+    }
+
+    suspend fun insertTkt() {
+        viewModelScope.launch {
+            try {
+                tkt.insertTiket(uiState.insertTktUiTiket.toTkt())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+}
 
 data class InsertTktUiState(
     val insertTktUiTiket: InsertTktUiTiket = InsertTktUiTiket(),
