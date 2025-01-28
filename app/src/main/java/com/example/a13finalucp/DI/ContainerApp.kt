@@ -19,9 +19,8 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val pesertaRepository: PesertaRepository
-
+    val eventRepository: EventRepository
     val tiketRepository: TiketRepository
-
 }
 
 class  ContainerApplication : AppContainer {
@@ -40,7 +39,13 @@ class  ContainerApplication : AppContainer {
         NetworkPesertaRepository(pesertaService)
     }
 
+//    EVENT
+    private val eventService: EventService by lazy{
+        retrofit.create(EventService::class.java) }
 
+    override val eventRepository: EventRepository by lazy {
+        NetworkEventRepository(eventService)
+    }
 
 //    TIKET
     private val tiketService: TiketService by lazy{
@@ -50,5 +55,6 @@ class  ContainerApplication : AppContainer {
         NetworkTiketRepository(tiketService)
     }
 
+//    TRANSAKSI
 
 }
