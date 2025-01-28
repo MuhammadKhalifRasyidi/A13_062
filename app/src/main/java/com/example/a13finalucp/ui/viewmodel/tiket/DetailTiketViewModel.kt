@@ -9,7 +9,24 @@ import com.example.a13finalucp.model.Tiket
 import com.example.a13finalucp.repository.TiketRepository
 import kotlinx.coroutines.launch
 
+class DetailTiketViewModel(private val tktRepository: TiketRepository) : ViewModel() {
 
+    var uiState by mutableStateOf(DetailTktUiState())
+        private set
+
+    fun fetchDetailTiket(id_tiket: Int) {
+        viewModelScope.launch {
+            uiState = DetailTktUiState(isLoading = true)
+            try {
+                val tiket = tktRepository.getTiketByIdTiket(id_tiket)
+                uiState = DetailTktUiState(detailTktUiTiket = tiket.data.toDetailTktUiTiket())
+            } catch (e: Exception) {
+                e.printStackTrace()
+                uiState = DetailTktUiState(isError = true, errorMessage = "Failed to fetch details: ${e.message}")
+            }
+        }
+    }
+}
 
 data class DetailTktUiState(
     val detailTktUiTiket: InsertTktUiTiket = InsertTktUiTiket(),
