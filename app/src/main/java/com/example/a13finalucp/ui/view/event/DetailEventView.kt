@@ -38,6 +38,96 @@ object DestinasiDetailEvent : DestinasiNavigasi {
     val routeWithArgs = "$route/{$IDEvent}"
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DetailEventScreen(
+    id_event: Int,
+    onEditClick: (Int) -> Unit = { },
+    onBackClick: () -> Unit = { },
+    modifier: Modifier = Modifier,
+    viewModel: DetailEventViewModel = viewModel(factory = PenyediaEventViewModel.Factory)
+) {
+    val event = viewModel.uiState.detailEvtUiEvent
+
+    LaunchedEffect(id_event) {
+        viewModel.fetchDetailEvent(id_event)
+    }
+
+    val isLoading = viewModel.uiState.isLoading
+    val isError = viewModel.uiState.isError
+    val errorMessage = viewModel.uiState.errorMessage
+
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(DestinasiDetailEvent.titleRes) },
+                navigationIcon = {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+            )
+        },
+        content = { paddingValues ->
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                if (isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                }
+                else if (isError) {
+                    Text(
+                        text = errorMessage,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else if (viewModel.uiState.isUiEventNotEmpty) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(16.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            elevation = CardDefaults.cardElevation(8.dp)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                // Use Row for each detail with label and value aligned
+                                DetailEvtRow(label = "ID Event", value = event.id_event)
+                                DetailEvtRow(label = "Nama Event", value = event.nama_event)
+                                DetailEvtRow(label = "Deskripsi Event", value = event.deskripsi_event)
+                                DetailEvtRow(label = "Tanggal Event", value = event.tanggal_event)
+                                DetailEvtRow(label = "Lokasi Event", value = event.lokasi_event)
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            Button(onClick = { onEditClick(event.id_event) }) {
+                                Text("Edit Data")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+}
+
 @Composable
 fun DetailEvtRow(label: String, value: Any) {
     Row(
