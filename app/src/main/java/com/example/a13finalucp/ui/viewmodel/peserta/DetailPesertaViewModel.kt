@@ -11,6 +11,16 @@ import kotlinx.coroutines.launch
 
 
 
+data class DetailPstUiState(
+    val detailPstUiPeserta: InsertPstUiPeserta = InsertPstUiPeserta(),
+    val isLoading: Boolean = false,
+    val isError: Boolean = false,
+    val errorMessage: String = "",
+) {
+    val isUiPesertaNotEmpty: Boolean
+        get() = detailPstUiPeserta != InsertPstUiPeserta()
+}
+
 fun Peserta.toDetailPstUiPeserta(): InsertPstUiPeserta {
     return InsertPstUiPeserta(
         id_peserta = id_peserta,
