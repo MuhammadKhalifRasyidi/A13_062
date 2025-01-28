@@ -34,6 +34,32 @@ object DestinasiInsertPeserta : DestinasiNavigasi {
 }
 
 
+
+@Composable
+fun InsertBody(
+    insertPstUiState: InsertPstUiState,
+    onPesertaValueChange: (InsertPstUiPeserta) -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(18.dp), modifier = modifier.padding(12.dp)
+    ) {
+        FormInput(
+            insertPstUiPeserta = insertPstUiState.insertPstUiPeserta,
+            onValueChange = onPesertaValueChange,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Button(
+            onClick = onSaveClick,
+            shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save")
+        }
+    }
+}
+
 @Composable
 fun FormInput(
     insertPstUiPeserta: InsertPstUiPeserta,
