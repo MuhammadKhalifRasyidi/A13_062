@@ -49,7 +49,50 @@ object DestinasiHomeEvent : DestinasiNavigasi {
     override val titleRes = "Home Event"
 }
 
-
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeEventScreen(
+    navigateToItemInsert: () -> Unit,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Int) -> Unit = {},
+    viewModel: HomeEventViewModel = viewModel(factory = PenyediaEventViewModel.Factory)
+) {
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    Scaffold (
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CostumeTopAppBar(
+                title = DestinasiHomeEvent.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.getEvt()
+                },
+                navigateUp = onBackClick
+            )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToItemInsert,
+                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+            ) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = "Add Event")
+            }
+        },
+    ) { innerPadding ->
+        HomeEventStatus(
+            homeEventUiState = viewModel.evtUIState,
+            retryAction = { viewModel.getEvt() },
+            modifier = Modifier.padding(innerPadding),
+            onDetailClick = onDetailClick,
+            onDeleteClick = {
+                viewModel.deleteEvt(it.id_event)
+                viewModel . getEvt ()
+            }
+        )
+    }
+}
 
 @Composable
 fun HomeEventStatus(
