@@ -77,7 +77,7 @@ fun HomeTransaksiScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = navigateToItemInsert,
-                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(18.dp)
+                shape = MaterialTheme.shapes.medium, modifier = Modifier.padding(bottom = 0.dp, start = 5.dp, end = 18.dp )
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add Transaksi")
             }
@@ -136,7 +136,7 @@ fun HomeTransaksiStatus(
 fun OnLoading(modifier: Modifier = Modifier) {
     Image(
         modifier = modifier.size(200.dp),
-        painter = painterResource(R.drawable.ic_launcher_background),
+        painter = painterResource(R.drawable.load),
         contentDescription = stringResource(R.string.app_name)
     )
 }
@@ -148,7 +148,8 @@ fun OnError(retryAction: () -> Unit, modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(id = R.drawable.ic_launcher_background), contentDescription = ""
+            painter = painterResource(id = R.drawable.error),
+            contentDescription = ""
         )
         Text(
             text = stringResource(R.string.app_name),

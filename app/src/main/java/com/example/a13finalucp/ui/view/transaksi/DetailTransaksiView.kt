@@ -25,13 +25,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a13finalucp.model.DataForeignKey
 import com.example.a13finalucp.model.DataForeignKey.TiketEvent
 import com.example.a13finalucp.model.DataForeignKey.TiketPeserta
 import com.example.a13finalucp.model.DataForeignKey.idTiket
+import com.example.a13finalucp.ui.customwidget.CostumeTopAppBar
 import com.example.a13finalucp.ui.navigation.DestinasiNavigasi
+import com.example.a13finalucp.ui.view.peserta.DestinasiDetailPeserta
 import com.example.a13finalucp.ui.viewmodel.transaksi.DetailTransaksiViewModel
 import com.example.a13finalucp.ui.viewmodel.transaksi.PenyediaTransaksiViewModel
 
@@ -68,19 +71,18 @@ fun DetailTransaksiScreen(
     val isError = viewModel.uiState.isError
     val errorMessage = viewModel.uiState.errorMessage
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(DestinasiDetailTransaksi.titleRes) },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
+            CostumeTopAppBar(
+                title = DestinasiDetailPeserta.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.fetchDetailTransaksi(id_transaksi)
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+                navigateUp = onBackClick
             )
         },
         content = { paddingValues ->

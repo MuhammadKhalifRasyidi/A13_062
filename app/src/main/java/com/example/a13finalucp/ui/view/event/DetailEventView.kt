@@ -25,9 +25,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a13finalucp.ui.customwidget.CostumeTopAppBar
 import com.example.a13finalucp.ui.navigation.DestinasiNavigasi
+import com.example.a13finalucp.ui.view.peserta.DestinasiDetailPeserta
 import com.example.a13finalucp.ui.viewmodel.event.DetailEventViewModel
 import com.example.a13finalucp.ui.viewmodel.event.PenyediaEventViewModel
 
@@ -57,19 +60,18 @@ fun DetailEventScreen(
     val isError = viewModel.uiState.isError
     val errorMessage = viewModel.uiState.errorMessage
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text(DestinasiDetailEvent.titleRes) },
-                navigationIcon = {
-                    IconButton(onClick = { onBackClick() }) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
-                    }
+            CostumeTopAppBar(
+                title = DestinasiDetailPeserta.titleRes,
+                canNavigateBack = true,
+                scrollBehavior = scrollBehavior,
+                onRefresh = {
+                    viewModel.fetchDetailEvent(id_event)
                 },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+                navigateUp = onBackClick
             )
         },
         content = { paddingValues ->
