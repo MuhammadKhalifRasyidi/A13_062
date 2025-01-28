@@ -52,6 +52,32 @@ object DestinasiHomeEvent : DestinasiNavigasi {
 
 
 @Composable
+fun EvtLayout(
+    event: List<Event>,
+    modifier: Modifier = Modifier,
+    onDetailClick: (Event) -> Unit,
+    onDeleteClick: (Event) -> Unit = {}
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        items(event) { IDEvent ->
+            EvtCard(
+                event = IDEvent,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { onDetailClick(IDEvent) },
+                onDeleteClick = {
+                    onDeleteClick(IDEvent)
+                }
+            )
+        }
+    }
+}
+
+@Composable
 fun EvtCard(
     event: Event,
     modifier: Modifier = Modifier,
