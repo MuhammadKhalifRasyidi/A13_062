@@ -39,6 +39,32 @@ object DestinasiInsertTiket : DestinasiNavigasi {
 
 
 @Composable
+fun InsertBody(
+    insertTktUiState: InsertTktUiState,
+    onTiketValueChange: (InsertTktUiTiket) -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        verticalArrangement = Arrangement.spacedBy(18.dp),
+        modifier = modifier.padding(12.dp)
+    ) {
+        FormInput(
+            insertTktUiTiket = insertTktUiState.insertTktUiTiket,
+            onValueChange = onTiketValueChange,
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Button(
+            onClick = onSaveClick,
+            shape = MaterialTheme.shapes.small, modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Save")
+        }
+    }
+}
+
+@Composable
 fun FormInput(
     insertTktUiTiket: InsertTktUiTiket,
     modifier: Modifier = Modifier,
